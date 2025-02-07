@@ -1,4 +1,4 @@
-In Machine Learning, Sampling Methods refer to various techniques for selecting data points from a data distribution. These methods play a crucial role in multiple tasks such as data preprocessing, model training, probabilistic inference, and generative models. Depending on the application scenario, the main sampling methods can be categorized as follows:
+··In Machine Learning, Sampling Methods refer to various techniques for selecting data points from a data distribution. These methods play a crucial role in multiple tasks such as data preprocessing, model training, probabilistic inference, and generative models. Depending on the application scenario, the main sampling methods can be categorized as follows:
 
 | **Category** | **Sampling Methods** |
 | --- | --- |
@@ -97,8 +97,7 @@ Two common MCMC algorithms:
 
 ---
 
-## **4. Gibbs Sampling**
-### **Basic Idea**
+###  Gibbs Sampling
 Gibbs Sampling is a special MCMC method suitable for **high-dimensional joint distributions**, but **each variable's conditional distribution is easy to sample**.
 
 Assume there are two variables $x$ and $y$, with a joint distribution $p(x, y)$, but it is difficult to sample directly:
@@ -113,3 +112,54 @@ Assume there are two variables $x$ and $y$, with a joint distribution $p(x, y)$,
 | **Gibbs Sampling** | **Conditional distributions are easy to sample** | Fast convergence, but requires conditional distributions to be analyzable |
 
 ---
+
+### **Hamiltonian Monte Carlo (HMC) Introduction**
+Hamiltonian Monte Carlo (HMC) is an improved Monte Carlo sampling method, particularly suited for sampling in **high-dimensional distributions**. Unlike the traditional Metropolis-Hastings method, HMC employs the concept of physical dynamics (Hamiltonian Dynamics) by introducing **momentum variables** and energy conservation to simulate state transitions, thereby efficiently exploring the target distribution.
+
+---
+
+**Core Concepts of HMC**
+
+In HMC, we view the target distribution as a physical system and introduce:
+1. **Position Variable** $q$:
+   - $q$ represents the variable of the target distribution, similar to a position in a system.
+   - $\pi(q)$ is the target distribution.
+2. **Momentum Variable** $p$:
+   - $p$ is an auxiliary variable independent of $q$, typically assumed to follow a normal distribution $p(p)\sim N(0,I)$.
+3. **Hamiltonian Dynamics**:
+   Define the Hamiltonian of the system $H(q,p)$:
+   $H(q,p)=U(q)+K(p)$
+   - $U(q)=-\log\pi(q)$: the potential energy, derived from the target distribution.
+   - $K(p)=\frac{1}{2}p^T p$: the kinetic energy, assuming momentum follows a standard normal distribution.
+4. **Dynamics with Energy Conservation**:
+   Through Hamiltonian dynamics, the state $(q,p)$ evolves along energy-conserving trajectories, efficiently exploring the target distribution.
+
+---
+
+**HMC Sampling Process**
+1. **Initialize state** $q_0$.
+2. In each step:
+   - **Sample a new momentum from the momentum distribution** $p\sim N(0,I)$.
+   - Update $(q,p)$ using Hamiltonian dynamics:
+     $$
+     \begin{aligned}
+     \frac{dq}{dt}&=\frac{\partial H}{\partial p}=p\\
+     \frac{dp}{dt}&=-\frac{\partial H}{\partial q}=-\nabla U(q)
+     \end{aligned}
+     $$
+   - Use Metropolis-Hastings to accept or reject the new state $(q',p')$ with acceptance probability:
+     $A=\min(1,\exp(H(q,p)-H(q',p')))$
+3. Repeat sampling until the samples cover the target distribution.
+
+---
+
+**Pros and Cons of HMC**
+**Advantages**
+- **Efficient exploration**: Reduces the impact of random walks using physical dynamics, making it especially suitable for high-dimensional distributions.
+- **Low rejection rate**: The momentum-guided trajectories reduce inefficient candidate states.
+- **Suitable for high-dimensional models**: Ideal for complex posterior distributions in Bayesian inference.
+
+**Disadvantages**
+- **Parameter sensitivity**: The step size and number of iterations require tuning, otherwise the method may be unstable or inefficient.
+- **Complex implementation**: Requires numerical methods (e.g., the Leapfrog method) to simulate Hamiltonian dynamics.
+
