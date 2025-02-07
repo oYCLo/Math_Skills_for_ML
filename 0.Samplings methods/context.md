@@ -1,4 +1,4 @@
-··In Machine Learning, Sampling Methods refer to various techniques for selecting data points from a data distribution. These methods play a crucial role in multiple tasks such as data preprocessing, model training, probabilistic inference, and generative models. Depending on the application scenario, the main sampling methods can be categorized as follows:
+In Machine Learning, Sampling Methods refer to various techniques for selecting data points from a data distribution. These methods play a crucial role in multiple tasks such as data preprocessing, model training, probabilistic inference, and generative models. Depending on the application scenario, the main sampling methods can be categorized as follows:
 
 | **Category** | **Sampling Methods** |
 | --- | --- |
